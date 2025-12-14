@@ -3,6 +3,7 @@ import { ProductsModel } from "./components/models/ProductsModel";
 import { CartModel } from "./components/models/CartModel";
 import { BuyerModel } from "./components/models/BuyerModel";
 import { apiProducts } from "./utils/data";
+import { API_URL, CDN_URL, categoryMap } from "./utils/constants"; // Импорт констант
 
 const productsModel = new ProductsModel();
 const cartModel = new CartModel();
@@ -54,9 +55,8 @@ console.log("После очистки:", buyerModel.getData());
 import { ApiService } from "./components/models/ApiService";
 import { Api } from "./components/base/Api";
 
-const baseUrl = import.meta.env.VITE_API_ORIGIN;
-
-const api = new Api(baseUrl);
+// Используем константу API_URL вместо прямого использования VITE_API_ORIGIN
+const api = new Api(API_URL); // Исправлено: передаем API_URL вместо baseUrl
 const apiService = new ApiService(api);
 
 apiService

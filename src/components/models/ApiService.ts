@@ -8,7 +8,8 @@ export class ApiService {
    * @returns Promise с массивом товаров
    */
   getProductList(): Promise<IProduct[]> {
-    return this.api.get<IProduct[]>("/product");
+    return this.api.get<{ items: IProduct[] }>("/product")
+      .then(data => data.items);
   }
 
   /**
