@@ -1,23 +1,32 @@
-import { IApi, IProduct, IOrderData, IOrderResult } from "../../types";
+import { IApi, IProduct, IOrderData, IOrderResult, IProductListResponse } from "../../types";
+import { IEvents } from "../base/Events";
+
 
 export class ApiService {
-  constructor(private api: IApi) {}
+  constructor(
+    private api: IApi,
+    private events: IEvents
+  ) {}
 
-  /**
-   * Получает каталог товаров с сервера
-   * @returns Promise с массивом товаров
-   */
-  getProductList(): Promise<IProduct[]> {
-    return this.api.get<{ items: IProduct[] }>("/product")
-      .then(data => data.items);
+  async getProductList(): Promise<IProductListResponse> {
+    try {
+      const response = await this.api.get<IProductListResponse>('/product');
+      this.events.emit('api:products:loaded');
+      return response;
+    } catch (error) {
+      this.events.emit('api:error', { error });
+      throw error;
+    }
   }
 
-  /**
-   * Отправляет заказ на сервер
-   * @param order - данные заказа
-   * @returns Promise с результатом заказа
-   */
-  submitOrder(order: IOrderData): Promise<IOrderResult> {
-    return this.api.post<IOrderResult>("/order", order);
+  async submitOrder(order: IOrderData): Promise<IOrderResult> {
+    try {
+      const result = await this.api.post<IOrderResult>('/order', order);
+      this.events.emit('api:order:submitted');
+      return result;
+    } catch (error) {
+      this.events.emit('api:error', { error });
+      throw error;
+    }
   }
 }

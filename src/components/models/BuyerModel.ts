@@ -1,7 +1,9 @@
 import { IBuyer, ValidationErrors } from "../../types";
+import { IEvents } from "../base/Events";
 /**
  * Модель для работы с данными покупателя
  * Отвечает за хранение и валидацию данных заказа
+ * @emits 'customer:changed' при изменении данных покупателя
  */
 export class BuyerModel {
   private data: Partial<IBuyer> = {};
@@ -13,7 +15,7 @@ export class BuyerModel {
    * @example
    * new CustomerModel({ email: 'test@mail.ru', phone: '+79991234567' })
    */
-  constructor(initialData?: Partial<IBuyer>) {
+  constructor(private events: IEvents, initialData?: Partial<IBuyer>) {
     if (initialData) {
       this.data = { ...initialData };
     }
@@ -24,6 +26,7 @@ export class BuyerModel {
       throw new Error("Не объект");
     }
     this.data = { ...this.data, ...data };
+    this.events.emit("customer:changed");
   }
 
   getData(): Partial<IBuyer> {
@@ -59,5 +62,6 @@ export class BuyerModel {
 
   clear(): void {
     this.data = {};
+    this.events.emit("customer:changed");
   }
 }

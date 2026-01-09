@@ -1,14 +1,19 @@
 import { IProduct } from "../../types";
+import { IEvents } from "../base/Events";
 
 /**
  * Модель для работы с каталогом товаров
  * Отвечает за хранение и управление списком товаров
+ * 
+ * @emits 'catalog:changed' при изменении каталога товаров
+ * @emits 'product:selected' при изменении выбранного товара
  */
+
 export class ProductsModel {
   private items: IProduct[] = [];
   private selectedItem: IProduct | undefined;
 
-  constructor(initialItems: IProduct[] = []) {
+   constructor(private events: IEvents, initialItems: IProduct[] = []) {
     this.items = initialItems;
   }
 
@@ -19,6 +24,7 @@ export class ProductsModel {
 
     this.items = [...items];
     this.selectedItem = undefined;
+    this.events.emit('catalog:changed');
   }
 
   getItems(): IProduct[] {
@@ -61,5 +67,6 @@ export class ProductsModel {
     }
 
     this.selectedItem = { ...item };
+    this.events.emit('product:selected');
   }
 }

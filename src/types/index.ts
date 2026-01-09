@@ -20,7 +20,6 @@ export interface IProduct {
 
 export type TPayment = "cash" | "card";
 
-// Базовый интерфейс для данных покупателя
 export interface IBuyer {
   payment: TPayment;
   email: string;
@@ -28,8 +27,11 @@ export interface IBuyer {
   address: string;
 }
 
-// Заказ расширяет данные покупателя и добавляет свои поля
-export interface IOrderData extends IBuyer {
+export interface IOrderData {
+  payment: TPayment;
+  email: string;
+  phone: string;
+  address: string;
   total: number;
   items: string[];
 }
@@ -39,5 +41,9 @@ export interface IOrderResult {
   total: number;
 }
 
-// Тип для ошибок валидации - использует ключи IBuyer
 export type ValidationErrors = Partial<Record<keyof IBuyer, string>>;
+
+export interface IProductListResponse {
+  total: number;
+  items: IProduct[];
+}
