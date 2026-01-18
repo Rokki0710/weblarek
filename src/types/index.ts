@@ -1,5 +1,10 @@
+// Типы методов для запросов с данными
 export type ApiPostMethods = "POST" | "PUT" | "DELETE";
 
+// Варианты оплаты
+export type TPayment = "cash" | "card";
+
+// Интерфейс API клиента
 export interface IApi {
   get<T extends object>(uri: string): Promise<T>;
   post<T extends object>(
@@ -9,41 +14,37 @@ export interface IApi {
   ): Promise<T>;
 }
 
+// Интерфейс товара
 export interface IProduct {
   id: string;
-  description: string;
-  image: string;
-  title: string;
-  category: string;
   price: number | null;
+  image: string;
+  description: string;
+  category: string;
+  title: string;
 }
 
-export type TPayment = "cash" | "card";
-
-export interface IBuyer {
-  payment: TPayment;
-  email: string;
-  phone: string;
-  address: string;
+// Интерфейс покупателя
+export interface ICustomer {
+  email?: string | null;
+  phone?: string | null;
+  payment?: TPayment | null;
+  address?: string | null;
 }
 
-export interface IOrderData {
-  payment: TPayment;
-  email: string;
-  phone: string;
-  address: string;
+// Интерфейс заказа
+export interface IOrder extends ICustomer {
   total: number;
   items: string[];
 }
 
-export interface IOrderResult {
+// Ответ от сервера на заказ
+export interface IOrderResponse {
   id: string;
   total: number;
 }
 
-export type ValidationErrors = Partial<Record<keyof IBuyer, string>>;
-
-export interface IProductListResponse {
-  total: number;
-  items: IProduct[];
+// Действия для карточки
+export interface ICardActions {
+  onClick(): void;
 }
