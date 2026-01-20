@@ -1,9 +1,9 @@
-import { IApi, IProduct, IOrder, IOrderResponse } from "../../types/index.ts";
+import { IApi, IProduct, IOrder, IOrderResponse } from "../../types/index";
 
 
 // Сервис для работы с API магазина
 export class ApiService {
-  private api: IApi; // HTTP клиент
+  private api: IApi;
 
   constructor(Api: IApi) {
     this.api = Api;
@@ -15,7 +15,7 @@ export class ApiService {
       const data = await this.api.get<{ items: IProduct[] }>("/product");
       return data.items;
     } catch (error) {
-      console.log("Ошибка получения данных: ", error);
+      console.log("Не удалось загрузить товары: ", error);
       return [];
     }
   }
