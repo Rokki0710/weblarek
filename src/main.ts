@@ -190,7 +190,7 @@ events.on(actions.CUSTOMER_UPDATE, () => {
   const validationResult = customerModel.validate();
   const buyerData = customerModel.getCustomerInfo();
   
-  // Для формы заказа (адрес и оплата)
+  // Для формы заказа(адрес и оплата)
   if (buyerData.address && buyerData.payment) {
     formOrder.isButtonDisabled = false;
     formOrder.errorMessage = "";
@@ -201,7 +201,7 @@ events.on(actions.CUSTOMER_UPDATE, () => {
     }`.trim();
   }
   
-  // Для формы контактов (телефон и email)
+  // Для формы контактов(телефон и email)
   if (buyerData.phone && buyerData.email) {
     const emailError = validationResult.email?.includes("Некорректный") ? validationResult.email : "";
     const phoneError = validationResult.phone?.includes("Некорректный") ? validationResult.phone : "";
@@ -225,43 +225,34 @@ events.on(actions.CUSTOMER_UPDATE, () => {
 events.on(actions.CONFIRM_ORDER, (e: SubmitEvent) => { 
   e.preventDefault(); 
   
-  if (!customerModel.isComplete()) {
-    const errors = customerModel.validate();
+  // Проверяем, что все данные заполнены
+  const errors = customerModel.validate();
+  if (Object.keys(errors).length > 0) {
     console.error("Не все данные заполнены:", errors);
-    
-    const buyerData = customerModel.getCustomerInfo();
-    if (!buyerData.address || !buyerData.payment) {
-      formOrder.errorMessage = "Заполните все поля формы заказа";
-    } else if (!buyerData.phone || !buyerData.email) {
-      formContacts.errorMessage = "Заполните все поля контактов";
-    }
     return;
   }
   
-  try {
-    const customerData = customerModel.getValidatedCustomerInfo();
-    
-    const orderData: IOrder = { 
-      ...customerData, 
-      total: cartModel.getTotalCost(), 
-      items: cartModel.getItems().map((item) => item.id), 
-    }; 
-    
-    newApiService 
-      .postOrder(orderData) 
-      .then((response) => { 
-        const orderData = response; 
-        modal.content = confirmation.render(orderData); 
-        cartModel.removeAllItems(); 
-        customerModel.clearCustomerInfo(); // изменили на clearCustomerInfo()
-      }) 
-      .catch((error) => { 
-        console.log("Ошибка отправки заказа", error); 
-      }); 
-  } catch (error) {
-    console.error("Ошибка валидации данных:", error);
-  }
-}); 
+  // Получаем данные покупателя
+  const customerData = customerModel.getCustomerInfo(); // ← ИЗМЕНИЛИ НА getCustomerInfo()
+  
+  const orderData: IOrder = { 
+    ...customerData, 
+    total: cartModel.getTotalCost(), 
+    items: cartModel.getItems().map((item) => item.id), 
+  }; 
+  
+  newApiService 
+    .postOrder(orderData) 
+    .then((response) => { 
+      const orderData = response; 
+      modal.content = confirmation.render(orderData); 
+      cartModel.removeAllItems(); 
+      customerModel.clearCustomerInfo(); 
+    }) 
+    .catch((error) => { 
+      console.log("Ошибка отправки заказа", error); 
+    }); 
+});
  
 events.on(actions.ORDER_COMPLETED, () => { 
   modal.close(); 
