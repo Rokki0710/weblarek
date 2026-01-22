@@ -1,6 +1,5 @@
 import { IApi, IProduct, IOrder, IOrderResponse } from "../../types/index";
 
-
 // Сервис для работы с API магазина
 export class ApiService {
   private api: IApi;
@@ -16,13 +15,13 @@ export class ApiService {
       return data.items;
     } catch (error) {
       console.log("Не удалось загрузить товары: ", error);
-      return [];
+      throw error;
     }
   }
 
   // Отправка заказа
   postOrder(order: IOrder): Promise<IOrderResponse> {
-      return this.api.post<IOrderResponse>("/order", order);
+    return this.api.post<IOrderResponse>("/order", order);
   }
 }
 

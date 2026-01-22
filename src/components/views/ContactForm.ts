@@ -30,7 +30,6 @@ export class FormContacts extends FormDefault {
     
     // Обработчик отправки формы
     this.container.addEventListener("submit", (e?: SubmitEvent) => {
-      this.events.emit(actions.DATA_SUBMIT, e);
       this.events.emit(actions.CONFIRM_ORDER, e);
     });
   }

@@ -26,10 +26,10 @@ export interface IProduct {
 
 // Интерфейс покупателя
 export interface ICustomer {
-  email?: string | null;
-  phone?: string | null;
-  payment?: TPayment | null;
-  address?: string | null;
+  payment: TPayment;
+  email: string;
+  phone: string;
+  address: string;
 }
 
 // Интерфейс заказа

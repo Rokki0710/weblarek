@@ -11,25 +11,28 @@ export class Product {
     this.events = events;
   }
 
-  setItem(items: IProduct[]): void {
+  // Установка списка товаров
+  setItems(items: IProduct[]): void {
     this.items = items;
-    this.events.emit(actions.PRODUCT_RECIEVED, items); // Уведомление о загрузке
+    this.events.emit(actions.PRODUCT_RECIEVED, items);
   }
 
   // Получение всех товаров
-  getItem(): IProduct[] {
+  getItems(): IProduct[] {
     return this.items;
   }
 
   // Поиск товара по ID
-  getItemByID(id: string): IProduct | undefined {
+  getItemById(id: string): IProduct | undefined {
     return this.items.find((item) => item.id === id);
   }
 
-  setSelectedItem(chosenItem: IProduct | null): void {
-    this.selectedItem = chosenItem;
+  // Установка выбранного товара
+  setSelectedItem(item: IProduct | null): void {
+    this.selectedItem = item;
   }
 
+  // Получение выбранного товара
   getSelectedItem(): IProduct | null {
     return this.selectedItem;
   }
