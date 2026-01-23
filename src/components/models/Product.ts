@@ -28,8 +28,9 @@ export class Product {
   }
 
   // Установка выбранного товара
-  setSelectedItem(item: IProduct | null): void {
+  setSelectedItem(item: IProduct): void {
     this.selectedItem = item;
+    this.events.emit(actions.CARD_OPEN, item);
   }
 
   // Получение выбранного товара
